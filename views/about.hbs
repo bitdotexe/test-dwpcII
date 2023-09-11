@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        h1 {
+            text-align: center;
+        }
+
+        p {
+            text-align: justify;
+        }
+
+        img {
+            max-height: 250px;
+            max-width: 250px;
+        }
+
+        .center {
+            display: block;
+            margin-left: auto;
+            margin-right: auto;
+            width: 50%;
+        }
+
+    </style>
+</head>
+<body>
+        <h1>{{ name }}</h1>
+        <p>{{ description }}</p>
+        <p>{{ mission }}</p>
+        <p>{{ values }}</p>
+        <img src="{{ image }}" alt="Imagen aleatoria" class="center">
+</body>
+</html>
