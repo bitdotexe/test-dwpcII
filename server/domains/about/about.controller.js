@@ -2,7 +2,7 @@
 // GET "/"
 // GET "/index"
 const about = (req, res) => {
-  res.send("🚧 Under Construction '/about' 🚧");
+  res.render('home/aboutView', { appVersion: '1.0.0' });
 };
 
 // Controlador Home
