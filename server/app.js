@@ -1,13 +1,11 @@
-// Helps to handle http errors
+// Cargando dependencias
 import createError from 'http-errors';
-// Import the Express Library
 import express from 'express';
-// Is a Core-Node library to manage system paths
 import path from 'path';
-// Helps to parse client cookies
 import cookieParser from 'cookie-parser';
-// Library to log http communication
 import morgan from 'morgan';
+
+import mongoose from 'mongoose';
 
 // Setting Webpack Modules
 import webpack from 'webpack';
@@ -67,6 +65,17 @@ if (nodeEnviroment === 'development') {
 
 // Configuring the template engine
 configTemplateEngine(app);
+
+// Database connection Checker middleware
+app.use((req, res, next) => {
+  if (mongoose.connection.readyState === 1) {
+    log.info('✅ Verificación de conexión a bd exitosa');
+    next();
+  } else {
+    log.info('⛔ No pasa la verificación de conexión a la bd');
+    res.status(503).render('errors/e503View', { layout: 'errors' });
+  }
+});
 
 // Registering middlewares
 // Log all received requests
