@@ -1,10 +1,8 @@
 // Cargando dependencias
-import createError from 'http-errors';
 import express from 'express';
 import path from 'path';
 import cookieParser from 'cookie-parser';
 import morgan from 'morgan';
-
 import mongoose from 'mongoose';
 
 // Setting Webpack Modules
@@ -14,23 +12,23 @@ import WebpackHotMiddleware from 'webpack-hot-middleware';
 
 // Importing template-engine
 import configTemplateEngine from './config/templateEngine';
-// Importing subroutes
-import indexRouter from './routes/index';
-import usersRouter from './routes/users';
+
 // Importing webpack configuration
 import webpackConfig from '../webpack.dev.config';
 
 // Impornting winston logger
 import log from './config/winston';
 
-// Importando enrutador
+// Importing Router
 import router from './routes/router';
+
+import debug from './services/debugLogger';
 
 // Creando variable del directorio raiz
 // eslint-disable-next-line
 global['__rootdir'] = path.resolve(process.cwd());
 
-// We are creating the express instance
+// Creando la instancia de express
 const app = express();
 
 // Get the execution mode
@@ -39,16 +37,19 @@ const nodeEnviroment = process.env.NODE_ENV || 'production';
 // Deciding if we add webpack middleware or not
 if (nodeEnviroment === 'development') {
   // Start Webpack dev server
-  console.log('🛠️  Ejecutando en modo desarrollo');
+  debug('🛠️ Ejecutando en modo desarrollo 🛠️');
   // Adding the key "mode" with its value "development"
   webpackConfig.mode = nodeEnviroment;
-  // Setting the port
+  // Setting the dev server port to the same value as the express server
   webpackConfig.devServer.port = process.env.PORT;
   // Setting up the HMR (Hot Module Replacement)
   webpackConfig.entry = [
     'webpack-hot-middleware/client?reload=true&timeout=1000',
     webpackConfig.entry,
   ];
+  // Agregar el plugin a la configuración de desarrollo
+  // de webpack
+  webpackConfig.plugins.push(new webpack.HotModuleReplacementPlugin());
   // Creating the bundler
   const bundle = webpack(webpackConfig);
   // Enabling the webpack middleware
@@ -66,50 +67,26 @@ if (nodeEnviroment === 'development') {
 // Configuring the template engine
 configTemplateEngine(app);
 
-// Database connection Checker middleware
+// Database connection Checker Middleware
 app.use((req, res, next) => {
   if (mongoose.connection.readyState === 1) {
-    log.info('✅ Verificación de conexión a bd exitosa');
+    log.info('✅ Verificación de conexión a db existosa.');
     next();
   } else {
-    log.info('⛔ No pasa la verificación de conexión a la bd');
+    log.info('🔴 No pasa la verificacion de conexión a la BD');
     res.status(503).render('errors/e503View', { layout: 'errors' });
   }
 });
 
-// Registering middlewares
-// Log all received requests
+// Se establecen los middlewares
 app.use(morgan('dev', { stream: log.stream }));
-// Parse request data into json
 app.use(express.json());
-// Decode url info
 app.use(express.urlencoded({ extended: false }));
-// Parse client cookies into json
 app.use(cookieParser());
-// Set up the static file server
-app.use(express.static(path.join(__dirname, '../public')));
+// Crea un server de archivos estaticos
+app.use(express.static(path.join(__dirname, '..', 'public')));
 
-// Registering routes
-// app.use('/', indexRouter);
-// app.use('/users', usersRouter);
+// Registro de Rutas
 router.addRoutes(app);
-
-// catch 404 and forward to error handler
-app.use((req, res, next) => {
-  log.info(`404 Pagina no encontrada ${req.method} ${req.originalUrl}`);
-  next(createError(404));
-});
-
-// error handler
-app.use((err, req, res) => {
-  // set locals, only providing error in development
-  res.locals.message = err.message;
-  res.locals.error = req.app.get('env') === 'development' ? err : {};
-
-  // render the error page
-  res.status(err.status || 500);
-  log.error(`${err.status || 500} - ${err.message}`);
-  res.render('error');
-});
 
 export default app;
