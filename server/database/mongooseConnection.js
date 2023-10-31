@@ -9,6 +9,6 @@ export default async function connectWithRetry(mongoUrl) {
   } catch (error) {
     log.error(`💔 No se logró la conexión a la db 💔: ${error.message}`);
     log.error('Intentando la conexión en 20 segundos');
-    setTimeout(() => connectWithRetry(mongoUrl), 20000);
+    setTimeout(() => connectWithRetry(mongoUrl), 10000);
   }
 }
