@@ -2,7 +2,7 @@
 
 // GET '/project/showDashboard'
 const showDashboard = (req, res) => {
-  res.send("🚧 Under Construction '/project/showDashboard' 🚧");
+  res.render('project/addView');
 };
 // GET '/project/addForm'
 const addForm = (req, res) => {
