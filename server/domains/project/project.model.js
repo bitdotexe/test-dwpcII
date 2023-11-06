@@ -18,5 +18,5 @@ const ProjectSchema = new Schema({
   },
 });
 
-//  Compilando el Schemq para generar el modelo
+//  Compilando el Schema para generar el modelo
 export default mongoose.model('project', ProjectSchema);
