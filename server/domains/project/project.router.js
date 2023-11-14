@@ -21,12 +21,12 @@ router.get(['/', '/dashboard'], projectController.showDashboard);
 router.get(['/add-form', '/add'], projectController.addForm);
 // POST "/project/add"
 router.post(
-    '/add',
-    ValidateFactory({
-        schema: projectValidator.projectSchema,
-        getObject: projectValidator.getProject,
-    }),
-    projectController.addPost
+  '/add',
+  ValidateFactory({
+    schema: projectValidator.projectSchema,
+    getObject: projectValidator.getProject,
+  }),
+  projectController.addPost,
 );
 
 // Exporto este tramo de ruta
