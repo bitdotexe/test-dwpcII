@@ -127,6 +127,9 @@ const editPut = async (req, res) => {
   }
 };
 
+// DELETE "/project/:id"
+const deleteProject = (req, res) => res.status(200).json({ id: req.params.id });
+
 // Controlador user
 export default {
   // Action Methods
@@ -135,4 +138,5 @@ export default {
   addPost,
   edit,
   editPut,
+  deleteProject,
 };
