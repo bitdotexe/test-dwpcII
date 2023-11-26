@@ -1,6 +1,6 @@
 export default async function deleteProject(id) {
   try {
-    const url = `${window.location.protocol}//${window.location.host}/project/${id}`;
+    const url = `${window.location.protocol}//${window.location.host}/projects/${id}`;
     console.log(url);
     const response = await fetch(url, {
       method: 'DELETE',
@@ -8,7 +8,7 @@ export default async function deleteProject(id) {
     if (response.ok) {
       console.log('🔥🔥🔥🔥🔥');
       console.log(await response.json());
-      // window.location.reload();
+      window.location.reload();
     } else {
       throw new Error(
         `Error deleting resource with ID ${id}: ${response.status} ${response.statusText}`,

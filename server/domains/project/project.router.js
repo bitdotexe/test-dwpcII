@@ -6,6 +6,7 @@ import projectController from './project.controller';
 
 // Importando factory de validación
 import ValidateFactory from '../../services/validateFactory';
+
 // Importando el validador de proyectos
 import projectValidator from './project.validator';
 
@@ -16,9 +17,11 @@ const router = new Router();
 // GET '/project/'
 // GET '/project/dashboard'
 router.get(['/', '/dashboard'], projectController.showDashboard);
+
 // GET '/project/add-form'
 // GET '/project/add'
 router.get(['/add-form', '/add'], projectController.addForm);
+
 // POST "/project/add"
 router.post(
   '/add',
@@ -28,8 +31,10 @@ router.post(
   }),
   projectController.addPost,
 );
+
 // GET "/project/edit/:id"
 router.get('/edit/:id', projectController.edit);
+
 // PUT "/project/edit/:id"
 router.put(
   '/edit/:id',
@@ -39,6 +44,7 @@ router.put(
   }),
   projectController.editPut,
 );
+
 // DELETE "/project/:id"
 router.delete('/:id', projectController.deleteProject);
 
