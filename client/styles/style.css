@@ -1,7 +1,7 @@
 body {
   padding: 50px;
   font-size: 14px;
-  font-family: "Lucida Grande", Helvetica, Arial, sans-serif;
+  font-family: 'Lucida Grande', Helvetica, Arial, sans-serif;
 }
 
 a {
@@ -20,11 +20,19 @@ h1 {
 }
 
 #brand-logo-img img {
-  margin-right: 10px; /* Add some space between the image and text if desired */
+  margin-right: 10px;
+  /* Add some space between the image and text if desired */
 }
 
 .card-title.add-project {
-  color: #fff;
+  color: #FFF;
   text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.6);
-  font-size: 24px;
+  font: 24px;
+}
+
+#toast-container {
+  top: auto !important;
+  right: auto !important;
+  bottom: 70%;
+  left: 40%;
 }

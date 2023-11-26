@@ -25,6 +25,7 @@ const addPost = async (req, res) => {
   if (validationError) {
     log.info('Se entrega al cliente error de validación de add Project');
     // Se desestructuran los datos de validación
+    // y se renombran de  "value" a "project"
     const { value: project } = validationError;
     // Se extraen los campos que fallaron en la validación
     const errorModel = validationError.inner.reduce((prev, curr) => {
@@ -34,27 +35,26 @@ const addPost = async (req, res) => {
       workingPrev[`${curr.path}`] = curr.message;
       return workingPrev;
     }, {});
-    return res.status(422).render('project/addView', { project, errorModel });
+    return res.status(422).render('projects/addView', { project, errorModel });
   }
   // En caso de que pase la validación
   // Se desestructura la información
   // de la peticion
   const { validData: project } = req;
-  // Creando la instancia de un documento
-  // con los valores de 'project'
-  const projectDocument = new ProjectModel(project);
   try {
-    // Se salva el documento en la colección correspondiente
-    const savedProject = await projectDocument.save();
-    // Se informa al cliente que se a guardado el proyecto
+    // Creando la instancia de un documento con los valores de 'project'
+    const savedProject = await ProjectModel.create(project);
+    // Se informa al cliente que se guardo el proyecto
     log.info(`Se carga proyecto ${savedProject}`);
-    //  Se registra en el log de redireccionamiento
-    log.info('Se redirecciona el sistema a /projects');
-    //  Se redirecciona el sistema a la ruta /projects
-    return res.redirect('/projects/dashboard');
+    // Se registra en el log el redireccionamiento
+    log.info('Se redirecciona el sistema a /project');
+    // Agregando mensaje de flash
+    req.flash('successMessage', 'Proyecto agregado con exito');
+    // Se redirecciona el sistema a la ruta '/project'
+    return res.redirect('/projects/showDashboard');
   } catch (error) {
     log.error(
-      'ln 56 project.controller: Error al guardar proyecto en la base de datos',
+      'ln 53 project.controller: Error al guardar proyecto en la base de datos',
     );
     return res.status(500).json(error);
   }
@@ -83,6 +83,7 @@ const edit = async (req, res) => {
   }
 };
 
+// PUT "/project/edit/:id"
 // PUT "/project/edit/:id"
 const editPut = async (req, res) => {
   const { id } = req.params;
@@ -120,6 +121,8 @@ const editPut = async (req, res) => {
     // Se salvan los cambios
     log.info(`Actualizando proyecto con id: ${id}`);
     await project.save();
+    // Generando mensaje FLASH
+    req.flash('successMessage', 'Proyecto editado con exito');
     return res.redirect(`/projects/edit/${id}`);
   } catch (error) {
     log.error(`Error al actualizar proyecto con id: ${id}`);
@@ -129,11 +132,12 @@ const editPut = async (req, res) => {
 
 // DELETE "/project/:id"
 const deleteProject = async (req, res) => {
-  // Extrayendo el id de los parametros
   const { id } = req.params;
   // Usando el modelo para borrar el proyecto
   try {
     const result = await ProjectModel.findByIdAndRemove(id);
+    // Agregando mensaje de flash
+    req.flash('successMessage', 'Proyecto borrado con exito');
     return res.status(200).json(result);
   } catch (error) {
     return res.status(500).json(error);

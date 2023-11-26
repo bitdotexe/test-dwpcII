@@ -17,6 +17,7 @@ const router = new Router();
 // GET '/project/'
 // GET '/project/dashboard'
 router.get(['/', '/dashboard'], projectController.showDashboard);
+router.get(['/showDashboard', '/projects'], projectController.showDashboard);
 
 // GET '/project/add-form'
 // GET '/project/add'
